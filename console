@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+define('REPORTS_STORAGE_PATH', __DIR__ . '/public/reports/');
+define('REPORT_TEMPLATE_PATH', __DIR__ . '/src/ParserContext/Infrastructure/Resources/Views/report.php');
+
+$services = require_once('./services.php');
+
+try {
+    $consoleInput = new \App\System\Console\ConsoleInput($argv);
+    $container = new \App\System\Container\Container($services);
+
+    $app = new App\System\Application\Application($container);
+    $output = $app->handle($consoleInput);
+} catch (\Throwable $e) {
+    $output = new \App\System\Console\ConsoleOutput('Error: ' . $e->getMessage());
+}
+
+echo $output;
